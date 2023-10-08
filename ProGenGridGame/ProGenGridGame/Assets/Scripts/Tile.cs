@@ -9,7 +9,7 @@ public class Tile : MonoBehaviour
     public Color tileColor;
 
     //For storing the row and column of the tile (for easy identification)
-    public int row;
+    public int row; /*why if there are already those variables in the Grid Script */
     public int column;
 
     //bools for setting whether the tile is a trap or inaccessible 

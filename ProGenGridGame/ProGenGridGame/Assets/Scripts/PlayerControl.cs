@@ -22,11 +22,11 @@ public class PlayerControl : MonoBehaviour
     void Start()
     {
         //This sets the player to grid place 0,0 at start
-        transform.position = grid.GetTilePosition(rIndex, cIndex);
+        transform.position = grid.GetTilePosition(rIndex, cIndex); //will always equal 0,0
 
         //We make sure that the current tile and target tile are set to our current 0,0 tile at start
-        currentTile = grid.tiles[rIndex, cIndex];
-        targetTile = currentTile;
+        currentTile = grid.tiles[rIndex, cIndex]; //currently is 0,0 changes whenever the player moves
+        targetTile = currentTile; //currently is 0,0 but changes
 
         playerColor = GetComponentInChildren<SpriteRenderer>().color;
         
@@ -37,7 +37,7 @@ public class PlayerControl : MonoBehaviour
     {
         //If the player is not moving, WASD can be used to set the direction the player needs to move.
         //Player will then move a single space in that direction
-        if (!isMoving)
+        if (!isMoving) /* why do you need the condition of not moving? why can't you just code whenever the player pressed a key? */
         {
             if (Input.GetKeyDown(KeyCode.D))
             {
@@ -61,18 +61,18 @@ public class PlayerControl : MonoBehaviour
         //We run the coroutine that moves the player from their current position to their target position
         if (targetTile != currentTile)
         {
-            StartCoroutine(MovePlayer(grid.GetTilePosition(currentTile), grid.GetTilePosition(targetTile)));
+            StartCoroutine(MovePlayer(grid.GetTilePosition(currentTile), grid.GetTilePosition(targetTile))); /* what */
 
             //We then make a referenc to the last tile in case we need it again later -See: Traps
             lastTile = currentTile;
             //And we make sure to set currentTile to the targettile so that we dont run the corourine endlessly
-            currentTile = targetTile;
+            currentTile = targetTile; 
         }   
     }
 
     //These two functions do the same thing but take in different arguments.
     //The first sets the target tile based on WASD direction  
-    public void SetTargetTile(Vector3 dir)
+    public void SetTargetTile(Vector3 dir)  /*confusing*/
     {
         if (rIndex + dir.x >= 0 && rIndex + dir.x < grid.rows && cIndex + dir.y >= 0 && cIndex + dir.y < grid.columns)
         {
@@ -92,7 +92,7 @@ public class PlayerControl : MonoBehaviour
     //The second let's us direct pass a tile as target tile.
     //In this case we also need to remeber to update the row and column indices since we'll need them 
     //to keep track of where we are in the grid
-    public void SetTargetTile(Tile t)
+    public void SetTargetTile(Tile t) /*think this function makes the player get pushed back to the recent tile when they go try to go to inaccessible tile*/ 
     {
         if (!t.isInaccessible)
         {
