@@ -24,7 +24,7 @@ public class GridGenerator : MonoBehaviour
     public List<Tile> trapTiles = new List<Tile>(); /* making seperate lists of all the trap and tiles */
     private List<Tile> inaccessibleTiles = new List<Tile>(); /*why is one list private but one public*/ 
     public List<Tile> teleportTiles = new List<Tile>();
-    public List<Tile> checkteleportTiles = new List<Tile>();
+
 
     void Awake()     /* why is this function never called? */
     {
@@ -153,27 +153,20 @@ public class GridGenerator : MonoBehaviour
         t.isTeleport = true;
     }
 
-    private Tile GetRandomTile()
+    public Tile GetRandomTile()
     {
         //This just returns a random tile from the 2D area but using a random row and random column index
-        return tiles[Random.Range(0, rows), Random.Range(0, columns)];
+        //return tiles[Random.Range(0, rows), Random.Range(0, columns)];
 
-    }
+        Tile t = tiles[Random.Range(0, rows), Random.Range(0, columns)];
 
-    public void Checkteleport()
-    {
-        Tile t = GetRandomTile();
-
-        while (inaccessibleTiles.Contains(t) || trapTiles.Contains(t) || teleportTiles.Contains(t))
+        while (t == tiles[0, 0] || inaccessibleTiles.Contains(t) || trapTiles.Contains(t) || teleportTiles.Contains(t))
         {
             t = GetRandomTile();
         }
 
-        //checkteleportTiles.Add(t);
-        Tile randomTile = t;
-   
+        return t; 
+
     }
-
-
 
 }

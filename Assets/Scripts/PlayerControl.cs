@@ -18,14 +18,10 @@ public class PlayerControl : MonoBehaviour
     private Tile lastTile;
     private Tile targetTile;
     public Tile randomTile;
-    public int randomr;
-    public int randomc;
 
 
     void Start()
     {      
-        int randomr = Random.Range(0, 7);
-        int randomc = Random.Range(0, 7);
 
         //This sets the player to grid place 0,0 at start
         transform.position = grid.GetTilePosition(rIndex, cIndex); //will always equal 0,0
@@ -68,7 +64,7 @@ public class PlayerControl : MonoBehaviour
         //We run the coroutine that moves the player from their current position to their target position
         if (targetTile != currentTile)
         {
-            StartCoroutine(MovePlayer(grid.GetTilePosition(currentTile), grid.GetTilePosition(targetTile))); /* what */
+            StartCoroutine(MovePlayer(grid.GetTilePosition(currentTile), grid.GetTilePosition(targetTile))); /*moves the player from current tile to target tile*/
 
             //We then make a referenc to the last tile in case we need it again later -See: Traps
             lastTile = currentTile;
@@ -159,21 +155,13 @@ public class PlayerControl : MonoBehaviour
 
     public void TeleportEvent()
     {
-        randomr = Random.Range(0, 7);
-        randomc = Random.Range(0, 7);
-        //currentTile = grid.tiles[randomr, randomc];
-        randomTile = grid.tiles[randomr, randomc];
-
-        //randomTile = GetRandomTile();
-        // while randomTile.isInaccessible || randomTile.isTeleport || randomTile.isTrap)
-        /*  {
-                GetRandomTile();
-            } */
+        randomTile = grid.GetRandomTile();
         if (currentTile.isTeleport)
         {
-            transform.position = grid.GetTilePosition(randomr, randomc);
-        }
 
+            transform.position = grid.GetTilePosition(randomTile);
+            currentTile = randomTile;
+        }
     }
 
         //This coroutine just flashs the player red when they are hit by a trap
