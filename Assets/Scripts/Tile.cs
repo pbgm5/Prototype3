@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
     //bools for setting whether the tile is a trap or inaccessible 
     public bool isTrap;
     public bool isInaccessible;
-
+    public bool isTeleport;
 
     //This is a method for adjusting the color of the tile, we call it in the GridGenerator to color the tile once we've 
     //randomly decided with type of tile it will be 

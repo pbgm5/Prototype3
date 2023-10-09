@@ -14,21 +14,28 @@ public class PlayerControl : MonoBehaviour
     private int lastRIndex = 0;
     private int lastCIndex = 0;
     private int cIndex = 0;
-
     private Tile currentTile;
     private Tile lastTile;
     private Tile targetTile;
+    public Tile randomTile;
+    public int randomr;
+    public int randomc;
+
 
     void Start()
-    {
+    {      
+        int randomr = Random.Range(0, 7);
+        int randomc = Random.Range(0, 7);
+
         //This sets the player to grid place 0,0 at start
         transform.position = grid.GetTilePosition(rIndex, cIndex); //will always equal 0,0
-
+        //transform.position = grid.GetTilePosition(randomr, randomc);
         //We make sure that the current tile and target tile are set to our current 0,0 tile at start
         currentTile = grid.tiles[rIndex, cIndex]; //currently is 0,0 changes whenever the player moves
         targetTile = currentTile; //currently is 0,0 but changes
 
         playerColor = GetComponentInChildren<SpriteRenderer>().color;
+
         
     }
 
@@ -125,6 +132,7 @@ public class PlayerControl : MonoBehaviour
         //This tiny amounts can compound over time so this is necessary
         transform.position = endPos;
         ProcessTileEvents();
+        TeleportEvent();
 
     }
 
@@ -149,8 +157,27 @@ public class PlayerControl : MonoBehaviour
 
     }
 
-    //This coroutine just flashs the player red when they are hit by a trap
-    private IEnumerator FlashPlayer()
+    public void TeleportEvent()
+    {
+        randomr = Random.Range(0, 7);
+        randomc = Random.Range(0, 7);
+        //currentTile = grid.tiles[randomr, randomc];
+        randomTile = grid.tiles[randomr, randomc];
+
+        //randomTile = GetRandomTile();
+        // while randomTile.isInaccessible || randomTile.isTeleport || randomTile.isTrap)
+        /*  {
+                GetRandomTile();
+            } */
+        if (currentTile.isTeleport)
+        {
+            transform.position = grid.GetTilePosition(randomr, randomc);
+        }
+
+    }
+
+        //This coroutine just flashs the player red when they are hit by a trap
+        private IEnumerator FlashPlayer()
     {
         WaitForSeconds blinkDuration = new WaitForSeconds(0.04f);
 

@@ -19,11 +19,12 @@ public class GridGenerator : MonoBehaviour
 
     [Range(0, 5)] public int holeCount; /*the max for is 5 tiles? each random map can contain either 1-5 holes/traps? But everytime I restart it the hole is always 5 tiles while the trap is 3 tiles every map not randomized amounts of tiles*/
     [Range(0, 5)] public int trapTileCount;
-    [Range(0, 5)] public int teleportCount;
+    [Range(0, 2)] public int teleportCount;
 
     public List<Tile> trapTiles = new List<Tile>(); /* making seperate lists of all the trap and tiles */
     private List<Tile> inaccessibleTiles = new List<Tile>(); /*why is one list private but one public*/ 
     public List<Tile> teleportTiles = new List<Tile>();
+    public List<Tile> checkteleportTiles = new List<Tile>();
 
     void Awake()     /* why is this function never called? */
     {
@@ -149,7 +150,7 @@ public class GridGenerator : MonoBehaviour
         //So we add it to the appropriate list, color it and set the appropriate bool to true
         teleportTiles.Add(t);
         t.AdjustColor(Color.blue);
-        t.isInaccessible = true;
+        t.isTeleport = true;
     }
 
     private Tile GetRandomTile()
@@ -159,6 +160,19 @@ public class GridGenerator : MonoBehaviour
 
     }
 
+    public void Checkteleport()
+    {
+        Tile t = GetRandomTile();
+
+        while (inaccessibleTiles.Contains(t) || trapTiles.Contains(t) || teleportTiles.Contains(t))
+        {
+            t = GetRandomTile();
+        }
+
+        //checkteleportTiles.Add(t);
+        Tile randomTile = t;
+   
+    }
 
 
 

@@ -155,6 +155,9 @@ MonoBehaviour:
   cam: {fileID: 519420030}
   moveSpeed: 3
   grid: {fileID: 738049235}
+  randomTile: {fileID: 0}
+  randomr: 0
+  randomc: 0
 --- !u!4 &67102917
 Transform:
   m_ObjectHideFlags: 0
@@ -427,7 +430,10 @@ MonoBehaviour:
   originPos: {x: -3, y: -3, z: 0}
   holeCount: 5
   trapTileCount: 3
+  teleportCount: 1
   trapTiles: []
+  teleportTiles: []
+  checkteleportTiles: []
 --- !u!4 &738049236
 Transform:
   m_ObjectHideFlags: 0
