@@ -128,7 +128,7 @@ public class PlayerControl : MonoBehaviour
         //This tiny amounts can compound over time so this is necessary
         transform.position = endPos;
         ProcessTileEvents();
-        TeleportEvent();
+        //TeleportEvent();
 
     }
 
@@ -146,6 +146,14 @@ public class PlayerControl : MonoBehaviour
             //This step is also necessary to make sure out place on the grid gets properly updated
             SetTargetTile(lastTile);
         }
+        else if (currentTile.isTeleport)
+        {
+            randomTile = grid.GetRandomTile();
+            transform.position = grid.GetTilePosition(randomTile);
+            currentTile = randomTile;
+            targetTile = currentTile;
+
+        }
         else
         {
             isMoving = false;
@@ -153,16 +161,17 @@ public class PlayerControl : MonoBehaviour
 
     }
 
-    public void TeleportEvent()
+   /* public void TeleportEvent()
     {
         randomTile = grid.GetRandomTile();
         if (currentTile.isTeleport)
         {
-
-            transform.position = grid.GetTilePosition(randomTile);
             currentTile = randomTile;
+            targetTile = currentTile; 
+            transform.position = grid.GetTilePosition(randomTile);
+        
         }
-    }
+    }       */
 
         //This coroutine just flashs the player red when they are hit by a trap
         private IEnumerator FlashPlayer()
