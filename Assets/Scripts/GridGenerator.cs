@@ -51,6 +51,8 @@ public class GridGenerator : MonoBehaviour
                 //Here we Instantiate the GameObject and then immediately get a reference to it's Tile script.
                 GameObject o = Instantiate(tilePrefab, pos, Quaternion.identity, transform);
                 Tile t = o.GetComponent<Tile>();
+                t.row = r;
+                t.column = c;
 
                 //We make sure to set the newly created tile in the appropriate slot in the 2D array and then name it accordingly
                 tiles[r, c] = t;
