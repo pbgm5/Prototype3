@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class PlayerControl : MonoBehaviour
     public GridGenerator grid;
     private bool isMoving;
     private Color playerColor;
-   
+
     private int rIndex = 0;
     private int lastRIndex = 0;
     private int lastCIndex = 0;
@@ -19,9 +20,11 @@ public class PlayerControl : MonoBehaviour
     private Tile targetTile;
     public Tile randomTile;
 
+    public TextMeshProUGUI triesCounter;
+    public int triesCount = 0;
 
     void Start()
-    {      
+    {
 
         //This sets the player to grid place 0,0 at start
         transform.position = grid.GetTilePosition(rIndex, cIndex); //will always equal 0,0
@@ -32,12 +35,13 @@ public class PlayerControl : MonoBehaviour
 
         playerColor = GetComponentInChildren<SpriteRenderer>().color;
 
-        
+
     }
 
 
     void Update()
     {
+        triesCounter.text = "Tries: " + triesCount;
         //If the player is not moving, WASD can be used to set the direction the player needs to move.
         //Player will then move a single space in that direction
         if (!isMoving) /* why do you need the condition of not moving? why can't you just code whenever the player pressed a key? */
@@ -54,12 +58,12 @@ public class PlayerControl : MonoBehaviour
             {
                 SetTargetTile(Vector3.up);
             }
-            else if (Input.GetKeyDown(KeyCode.S)) 
+            else if (Input.GetKeyDown(KeyCode.S))
             {
                 SetTargetTile(Vector3.down);
             }
         }
-        
+
         //here is what triggers the player to move, once the targettile and currentle are not the samw
         //We run the coroutine that moves the player from their current position to their target position
         if (targetTile != currentTile)
@@ -69,8 +73,9 @@ public class PlayerControl : MonoBehaviour
             //We then make a referenc to the last tile in case we need it again later -See: Traps
             lastTile = currentTile;
             //And we make sure to set currentTile to the targettile so that we dont run the corourine endlessly
-            currentTile = targetTile; 
-        }   
+            currentTile = targetTile;
+            TriesCount();
+        }
     }
 
     //These two functions do the same thing but take in different arguments.
@@ -89,13 +94,13 @@ public class PlayerControl : MonoBehaviour
                 rIndex += (int)dir.x;
                 cIndex += (int)dir.y;
             }
-        }      
+        }
     }
 
     //The second let's us direct pass a tile as target tile.
     //In this case we also need to remeber to update the row and column indices since we'll need them 
     //to keep track of where we are in the grid
-    public void SetTargetTile(Tile t) /*think this function makes the player get pushed back to the recent tile when they go try to go to inaccessible tile*/ 
+    public void SetTargetTile(Tile t) /*think this function makes the player get pushed back to the recent tile when they go try to go to inaccessible tile*/
     {
         if (!t.isInaccessible)
         {
@@ -159,7 +164,7 @@ public class PlayerControl : MonoBehaviour
         if (currentTile.isTeleport)
         {
             currentTile = randomTile;
-            targetTile = currentTile; 
+            targetTile = currentTile;
             transform.position = grid.GetTilePosition(randomTile);
             currentTile = randomTile;
             targetTile = currentTile;
@@ -167,10 +172,10 @@ public class PlayerControl : MonoBehaviour
             cIndex = currentTile.column;
 
         }
-    }       
+    }
 
-        //This coroutine just flashs the player red when they are hit by a trap
-        private IEnumerator FlashPlayer()
+    //This coroutine just flashs the player red when they are hit by a trap
+    private IEnumerator FlashPlayer()
     {
         WaitForSeconds blinkDuration = new WaitForSeconds(0.04f);
 
@@ -186,6 +191,15 @@ public class PlayerControl : MonoBehaviour
         sr.color = Color.red;
         yield return blinkDuration;
         sr.color = playerColor;
+
+    }
+
+    public void TriesCount()
+    {
+        if (currentTile.isTrap)
+        {
+            triesCount++;
+        }
 
     }
 }

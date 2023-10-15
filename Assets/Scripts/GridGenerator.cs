@@ -18,12 +18,14 @@ public class GridGenerator : MonoBehaviour
     public Vector3 originPos = new Vector3(-3, -3, 0); /*Forgot what Vector2 and Vecotr3 is... if origin is at 0,0 why is it -3,-3 */
 
     [Range(0, 5)] public int holeCount; /*the max for is 5 tiles? each random map can contain either 1-5 holes/traps? But everytime I restart it the hole is always 5 tiles while the trap is 3 tiles every map not randomized amounts of tiles*/
-    [Range(0, 5)] public int trapTileCount;
+    [Range(0, 10)] public int trapTileCount;
     [Range(0, 2)] public int teleportCount;
+    [Range(0, 1)] public int treasureCount;
 
     public List<Tile> trapTiles = new List<Tile>(); /* making seperate lists of all the trap and tiles */
     private List<Tile> inaccessibleTiles = new List<Tile>(); /*why is one list private but one public*/ 
     public List<Tile> teleportTiles = new List<Tile>();
+    public List<Tile> treasureTile = new List<Tile>();
 
 
     void Awake()     /* why is this function never called? */
@@ -72,8 +74,12 @@ public class GridGenerator : MonoBehaviour
             AddTraps();
         }
         for (int i = 0; i < teleportCount; i++)
+          {
+              AddTeleport();
+          } 
+        for (int i = 0; i < treasureCount; i++)
         {
-            AddTeleport();
+            AddTreasure();
         }
     }
 
@@ -110,7 +116,7 @@ public class GridGenerator : MonoBehaviour
         //...when we break out of the while loop, it means what the random tile selected fulfills the above criteria
         //So we add it to the appropriate list, color it and set the appropriate bool to true
         trapTiles.Add(t); /*adds the tile to the trapTiles list */
-        t.AdjustColor(Color.red);
+        //t.AdjustColor(Color.red);
         t.isTrap = true;
 
     }
@@ -153,6 +159,26 @@ public class GridGenerator : MonoBehaviour
         teleportTiles.Add(t);
         t.AdjustColor(Color.blue);
         t.isTeleport = true;
+    }
+
+    private void AddTreasure()
+    {
+        //We get a random tile 
+        Tile t = GetRandomTile();
+
+        //We check that it isnt already been inluded as either a trap or Hole and that it doesnt set the player's start position 
+        //as a trap. We do this by checking that, while the tile is either the origin tile, a hole or a trap, we keep getting a new tile
+
+        while (t == tiles[0, 0] || inaccessibleTiles.Contains(t) || trapTiles.Contains(t) || teleportTiles.Contains(t))
+        {
+            t = GetRandomTile();
+        }
+
+        //...when we break out of the while loop, it means what the random tile selected fulfills the above criteria
+        //So we add it to the appropriate list, color it and set the appropriate bool to true
+        treasureTile.Add(t);
+        t.AdjustColor(Color.yellow);
+        t.isTreasure = true;
     }
 
     public Tile GetRandomTile()
