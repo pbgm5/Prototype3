@@ -8,6 +8,7 @@ public class PlayerControl : MonoBehaviour
     public CameraShake cam;
     public float moveSpeed;
     public GridGenerator grid;
+    public GameManager game;
     private bool isMoving;
     private Color playerColor;
 
@@ -21,7 +22,7 @@ public class PlayerControl : MonoBehaviour
     public Tile randomTile;
 
     public TextMeshProUGUI triesCounter;
-    public int triesCount = 0;
+    public int triesCount = 5;
 
     void Start()
     {
@@ -68,13 +69,25 @@ public class PlayerControl : MonoBehaviour
         //We run the coroutine that moves the player from their current position to their target position
         if (targetTile != currentTile)
         {
-            StartCoroutine(MovePlayer(grid.GetTilePosition(currentTile), grid.GetTilePosition(targetTile))); /*moves the player from current tile to target tile*/
-
-            //We then make a referenc to the last tile in case we need it again later -See: Traps
-            lastTile = currentTile;
-            //And we make sure to set currentTile to the targettile so that we dont run the corourine endlessly
-            currentTile = targetTile;
             TriesCount();
+
+            if (triesCount >= 1 && triesCount <= 5)
+            {
+                StartCoroutine(MovePlayer(grid.GetTilePosition(currentTile), grid.GetTilePosition(targetTile))); /*moves the player from current tile to target tile*/
+
+                //We then make a referenc to the last tile in case we need it again later -See: Traps
+                lastTile = currentTile;
+                //And we make sure to set currentTile to the targettile so that we dont run the corourine endlessly
+                currentTile = targetTile;
+
+            }
+            else if (triesCount == 0)
+            {
+                Debug.Log("Teleport");
+                TriesRestart();
+
+            }
+ 
         }
     }
 
@@ -134,6 +147,7 @@ public class PlayerControl : MonoBehaviour
         transform.position = endPos;
         ProcessTileEvents();
         TeleportEvent();
+        Treasureobtain();
 
     }
 
@@ -174,6 +188,29 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    public void TriesRestart() 
+    {
+            rIndex = 0;
+            cIndex = 0;
+            currentTile = grid.tiles[rIndex, cIndex];
+            targetTile = currentTile;
+            transform.position = grid.GetTilePosition(rIndex, cIndex);
+            currentTile = grid.tiles[rIndex, cIndex];
+            targetTile = currentTile;
+            rIndex = currentTile.row;
+            cIndex = currentTile.column;
+            triesCount = 5;
+            isMoving = false;
+
+    }
+
+    public void Treasureobtain()
+    {
+        if (currentTile.isTreasure)
+        {
+            game.RestartGame();
+        }
+    }
     //This coroutine just flashs the player red when they are hit by a trap
     private IEnumerator FlashPlayer()
     {
@@ -196,9 +233,9 @@ public class PlayerControl : MonoBehaviour
 
     public void TriesCount()
     {
-        if (currentTile.isTrap)
+        if (currentTile.isTrap && triesCount <= 5)
         {
-            triesCount++;
+            triesCount--;
         }
 
     }

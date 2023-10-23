@@ -27,7 +27,7 @@ public class GridGenerator : MonoBehaviour
     public List<Tile> teleportTiles = new List<Tile>();
     public List<Tile> treasureTile = new List<Tile>();
 
-
+    //implement yellow tile spawn away from player spawn, reset player spawn when tries reach 5, when player reaches the yellow tile then restart new map
     void Awake()     /* why is this function never called? */
     {
         //Initilize 2D array
@@ -169,7 +169,7 @@ public class GridGenerator : MonoBehaviour
         //We check that it isnt already been inluded as either a trap or Hole and that it doesnt set the player's start position 
         //as a trap. We do this by checking that, while the tile is either the origin tile, a hole or a trap, we keep getting a new tile
 
-        while (t == tiles[0, 0] || inaccessibleTiles.Contains(t) || trapTiles.Contains(t) || teleportTiles.Contains(t))
+        while (t == tiles[0, 0] || inaccessibleTiles.Contains(t) || trapTiles.Contains(t) || teleportTiles.Contains(t) || t.row < 5 || t.column < 5)
         {
             t = GetRandomTile();
         }
